@@ -1,12 +1,12 @@
 # leo
 
-> A Vue.js project
+> leo-vue-validator demo
 
 ## Build Setup
 
 ``` bash
 # install dependencies
-npm install
+npm install or yarn install
 
 # serve with hot reload at localhost:8080
 npm run dev
@@ -15,4 +15,4 @@ npm run dev
 npm run build
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+在线链接[demo](https://leohuiyi.github.io/leo-vue-validator/index.html).

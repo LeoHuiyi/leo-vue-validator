@@ -4,7 +4,10 @@ import {ruleFn} from './rules'
 export default {
     name: 'leo-validator',
     render(h){
-        return h(this.tag || 'span', null, this.$slots.default || [])
+        return h(this.tag || 'span', {
+            'class': this.className,
+            'style': this.style
+        }, this.$slots.default || [])
     },
     data(){
         return Object.freeze({
@@ -18,23 +21,23 @@ export default {
             'default': function() {
                 return [
                     {
-                        key: '',
+                        key: '',//必须唯一
                         value: '',
                         rules: [
-                           // {
-                           //     rule: 'required', tip: '请输入活动名称',
-                           // },
-                           // {
-                           //     rule: (value, rule, item, cb) => {
-                           //         item.msg = ''
-                           //         setTimeout(() => {
-                           //             cb(() => {
-                           //                 item.state = 1
-                           //                 item.msg = 'wahahahahh'
-                           //             })
-                           //         }, 1000)
-                           //     }
-                           // }
+                            // {
+                            //     rule: 'required', tip: '请输入活动名称',
+                            // },
+                            // {
+                            //     rule: (value, rule, item, cb) => {
+                            //         item.msg = ''
+                            //         setTimeout(() => {
+                            //             cb(() => {
+                            //                 item.state = 1
+                            //                 item.msg = 'wahahahahh'
+                            //             })
+                            //         }, 1000)
+                            //     }
+                            // }
                         ],//必须调用cb
                         state: 0,//0: 没有验证过, 1: 通过, 2: 不通过, 3: 验证中
                         msg: '',
@@ -46,7 +49,13 @@ export default {
         tag: {
             type: String,
             'default': 'span'
-        }
+        },
+        className: {
+            type: [String, Object]
+        },
+        style: {
+            type: Object
+        },
     },
     watch: {
         forms(){
@@ -105,23 +114,30 @@ export default {
         initForms(){
             const initFormsData = this.initFormsData
             this.forms.forEach((item, i) => {
-                if(!initFormsData[item.key]) {
+                const initItem = initFormsData[item.key]
+                if(!initItem) {
                     initFormsData[item.key] = {
                         value: this.getItemValue(item.value),
                         msg: item.msg
                     }
+                    item.__enable = true
+                    item.state = 0
+                    item.__promiseHash = {}
+                }else{
+                    item.__enable = false
+                    this.$nextTick(() => {
+                        item.__enable = true
+                    })
                 }
-                item.state = 0
-                item.__enable = true
-                item.__promiseHash = {}
             })
         },
         resetFields(){
             if(!this.leoFormInit) {
                 throw new Error('请初始化')
             }
+            const initFormsData = this.initFormsData
             this.forms.forEach((item, i) => {
-                const initItem = this.initFormsData[item.key]
+                const initItem = initFormsData[item.key]
                 if(initItem) {
                     item.__enable = false
                     this.setItemValue(item, initItem.value)
@@ -210,7 +226,7 @@ export default {
                     item.state = 3
                     fn(item.value, rule, item, (cb) => {
                         if(item.__promiseHash && item.__promiseHash[id]) {
-                            cb && cb()
+                            cb && cb(item.value, rule, item)
                             delete item.__promiseHash[id]
                         }
                         resolve()
@@ -220,6 +236,9 @@ export default {
             }
         },
         async validateField(item) {
+            if(item.state === 3){
+                return
+            }
             const rules = item.rules
             if(!rules) {
                 return
@@ -229,11 +248,10 @@ export default {
                 if(len === 0) {
                     return
                 }
-                let fn
                 for(let i = 0; i < len; i++) {
                     await this.validateOne(item, rules[i])
                     if(item.state !== 1) {
-                        return fn
+                        return
                     }
                 }
                 return
