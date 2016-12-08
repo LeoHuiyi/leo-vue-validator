@@ -8,6 +8,7 @@ leo-vue-validator
 [demo下载地址](https://leohuiyi.github.io/leo-vue-validator/index.html)
 
 
+##例子
 
 ```vue
 <template>
@@ -73,7 +74,7 @@ leo-vue-validator
                 </li>
                 <li class="clearfix">
                     <label>
-                        <span>异步验证整组验证（array） : </span>
+                        <span>异步验证整组验证（array形式 失去焦点验证） : </span>
                         <input class="infoVal" type="text" v-model.lazy="form2[3].value[0]" :disabled="form2[3]['state'] == 3"/>
                         <input class="infoVal" type="text" v-model.lazy="form2[3].value[1]" :disabled="form2[3]['state'] == 3"/>
                     </label>
@@ -197,7 +198,6 @@ leo-vue-validator
                                             }
                                         })
                                     }, 1000)
-
                                 },
                             },
                         ],
@@ -253,6 +253,8 @@ leo-vue-validator
             submit1(){
                 this.$refs.leoForm1.validate().then((result)=> {
                     leoAlert(result)
+                }).catch((result)=>{
+                    leoAlert(result)
                 })
                 console.log(this.$refs.leoForm1.getFormData())
             },
@@ -261,6 +263,8 @@ leo-vue-validator
             },
             submit(){
                 this.$refs.leoForm.validate().then((result)=> {
+                    leoAlert(result)
+                }).catch((result)=>{
                     leoAlert(result)
                 })
                 console.log(this.$refs.leoForm.getFormData())
@@ -293,19 +297,6 @@ leo-vue-validator
         }
     }
 </script>
-
-<style>
-    #app{
-        width: 1200px;
-        margin: 40px auto;
-    }
-    .form1{
-        float: left;
-    }
-    .form2{
-        float: right;
-    }
-</style>
 ```
 
 ### options
@@ -317,12 +308,29 @@ form.key |	String	|	''	|   key(必须唯一)
 form.value |	String	|	''	|   value
 form.rules |	Array or Object	|	''	|   rules
 form.state |	String	|	''	|   0: 没有验证过, 1: 通过, 2: 不通过, 3: 验证中
-form.msg |	String	|	''	|   key(必须唯一)
-form.tip |	String	|	''	|   //替代默认的tip
-form.deep |	Boolean	|	''	|   key(必须唯一)
+form.msg |	String	|	''	|   提示信息
+form.tip |	String	|	''	|   替代默认规则的提示信息
+form.deep |	Boolean	|	''	|   深度watch
 tag	|	String	|	'span'	|	leo-validator tag
 className	|	String or Object	|	无	|	leo-validator class
 style	|	Object	|	无	|	leo-validator style
+
+### Method
+
+============
+
+在$refs上调用（具体看例子）
+添加可以直接在forms数组上添加（不能）！
+删除只能调用removeField接口！
+
+	Name	|		Description
+:-----------------------|:--------------|
+initForm	|	  初始化(必须首次验证前调用 才能开始验证)
+resetFields	|	  重置
+validate	|	  验证（是个Promise，具体可以看例子）
+removeField	|	  删除（删除item 可以传入数组）
+getFormData	|	  取得FormData
+
 
 
 

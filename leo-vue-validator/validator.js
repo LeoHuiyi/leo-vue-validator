@@ -20,30 +20,30 @@ export default {
             required: true,
             'default': function() {
                 return [
-                    {
-                        key: '',//必须唯一
-                        value: '',
-                        rules: [
-                            // {
-                            //     rule: 'required', tip: '请输入活动名称',
-                            // },
-                            // {
-                            //     rule: (value, rule, item, cb) => {
-                            //         item.msg = ''
-                            //         setTimeout(() => {
-                            //             cb(() => {
-                            //                 item.state = 1
-                            //                 item.msg = 'wahahahahh'
-                            //             })
-                            //         }, 1000)
-                            //     }
-                            // }
-                        ],//必须调用cb
-                        state: 0,//0: 没有验证过, 1: 通过, 2: 不通过, 3: 验证中
-                        msg: '',
-                        tip: '',//替代默认的回调
-                        deep: false,//value是对象时候 true
-                    }
+                    // {
+                    //     key: '',//必须唯一
+                    //     value: '',
+                    //     rules: [
+                    //         {
+                    //             rule: 'required', tip: '请输入活动名称',
+                    //         },
+                    //         {
+                    //             rule: (value, rule, item, cb) => {
+                    //                 item.msg = ''
+                    //                 setTimeout(() => {
+                    //                     cb(() => {
+                    //                         item.state = 1
+                    //                         item.msg = 'wahahahahh'
+                    //                     })
+                    //                 }, 1000)
+                    //             }
+                    //         }
+                    //     ],//必须调用cb
+                    //     state: 0,//0: 没有验证过, 1: 通过, 2: 不通过, 3: 验证中
+                    //     msg: '',//提示信息
+                    //     tip: '',//替代默认规则的提示信息
+                    //     deep: false,//value是对象时候 true
+                    // },
                 ]
             }
         },
@@ -172,7 +172,9 @@ export default {
         },
         validate(){
             if(!this.leoFormInit) {
-                return Promise.resolve(new Error('请初始化'))
+                return new Promise((resolve, reject) => {
+                    reject('请初始化')
+                })
             }
             const promises = this.forms.map((item, i) => {
                 const res = this.validateField(item)
