@@ -320,7 +320,7 @@ style	|	Object	|	无	|	leo-validator style
 ============
 
 在$refs上调用（具体看例子）
-添加可以直接在forms数组上添加（不能）！
+添加可以直接在forms数组上添加（要按vue的数组方法）！
 删除只能调用removeField接口！
 
 	Name	|		Description
