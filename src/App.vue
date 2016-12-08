@@ -61,7 +61,7 @@
                 </li>
                 <li class="clearfix">
                     <label>
-                        <span>异步验证整组验证（array） : </span>
+                        <span>异步验证整组验证（array形式 失去焦点验证） : </span>
                         <input class="infoVal" type="text" v-model.lazy="form2[3].value[0]" :disabled="form2[3]['state'] == 3"/>
                         <input class="infoVal" type="text" v-model.lazy="form2[3].value[1]" :disabled="form2[3]['state'] == 3"/>
                     </label>
@@ -185,7 +185,6 @@
                                             }
                                         })
                                     }, 1000)
-
                                 },
                             },
                         ],
@@ -241,6 +240,8 @@
             submit1(){
                 this.$refs.leoForm1.validate().then((result)=> {
                     leoAlert(result)
+                }).catch((result)=>{
+                    leoAlert(result)
                 })
                 console.log(this.$refs.leoForm1.getFormData())
             },
@@ -249,6 +250,8 @@
             },
             submit(){
                 this.$refs.leoForm.validate().then((result)=> {
+                    leoAlert(result)
+                }).catch((result)=>{
                     leoAlert(result)
                 })
                 console.log(this.$refs.leoForm.getFormData())

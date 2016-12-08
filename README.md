@@ -1,4 +1,4 @@
-# leo
+# leo-vue-validator
 
 > leo-vue-validator demo
 
