@@ -41,6 +41,7 @@ export default {
                         ],//必须调用cb
                         state: 0,//0: 没有验证过, 1: 通过, 2: 不通过, 3: 验证中
                         msg: '',
+                        tip: '',//替代默认的回调
                         deep: false,//value是对象时候 true
                     }
                 ]
