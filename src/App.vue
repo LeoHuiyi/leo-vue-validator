@@ -17,7 +17,7 @@
         <h3>
             改变forms中value的值 都会进行验证
         </h3>
-        <leo-validator ref="leoForm" :forms="form1" tag="div" class="form1" :style="{paddingLeft: '20px'}">
+        <leo-validator ref="leoForm" :forms="form1" tag="div" class="form1" :style="{paddingLeft: '10px'}">
             <h1>表单1(动态添加表单)</h1>
             <ul class="MoUpFlo_Module MoUpFlo_enterInfo">
                 <li class="clearfix" v-for="(item, index) in form1">
@@ -53,9 +53,10 @@
                 </li>
                 <li class="clearfix">
                     <label>
-                        <span>异步验证整组验证（obj形式 失去焦点验证） : </span>
-                        <input class="infoVal" type="text" v-model.lazy="form2[2]['value']['user']" :disabled="form2[2]['state'] == 3"/>
-                        <input class="infoVal" type="text" v-model.lazy="form2[2]['value']['password']" :disabled="form2[2]['state'] == 3"/>
+                        <span>异步验证整组验证 : </span>
+                        <p>（obj形式 失去焦点验证 password: 123456）</p>
+                        <input class="infoVal" placeholder="user" type="text" v-model.lazy="form2[2]['value']['user']" :disabled="form2[2]['state'] == 3"/>
+                        <input class="infoVal" placeholder="password" type="text" v-model.lazy="form2[2]['value']['password']" :disabled="form2[2]['state'] == 3"/>
                     </label>
                     <p>状态：{{form2[2]['state']}}&nbsp&nbsp&nbsp&nbsp提示：{{form2[2]['msg']}}</p>
                 </li>
