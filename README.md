@@ -3,9 +3,10 @@ leo-vue-validator
 
 一个异步的表单验证组件
 
+[demo在线链接](https://leohuiyi.github.io/leo-vue-validator/index.html)
 
-[demo在线链接](https://github.com/LeoHuiyi/leo-vue-validator/tree/gh-pages)
-[demo下载地址](https://leohuiyi.github.io/leo-vue-validator/index.html)
+[demo下载地址](https://github.com/LeoHuiyi/leo-vue-validator/tree/gh-pages)
+
 
 
 ##例子
