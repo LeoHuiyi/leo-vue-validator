@@ -26,7 +26,7 @@
                         <input class="infoVal" type="text" v-model="item.value"/>
                     </label>
                     <button @click="deleteItem(item)">删除</button>
-                    <p>状态：{{item.state}}&nbsp&nbsp&nbsp&nbsp提示：{{item.msg}}</p>
+                    <p>状态：{{item.state}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{item.msg}}</p>
                 </li>
             </ul>
             <button @click="initForm">初始化</button>
@@ -42,14 +42,14 @@
                         <span>手机号 : </span>
                         <input class="infoVal" type="text" v-model="form2[0]['value']"/>
                     </label>
-                    <p>状态：{{form2[0]['state']}}&nbsp&nbsp&nbsp&nbsp提示：{{form2[0]['msg']}}</p>
+                    <p>状态：{{form2[0]['state']}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{form2[0]['msg']}}</p>
                 </li>
                 <li class="clearfix">
                     <label>
                         <span>没有验证 : </span>
                         <input class="infoVal" type="text" v-model="form2[1]['value']"/>
                     </label>
-                    <p>状态：{{form2[1]['state']}}&nbsp&nbsp&nbsp&nbsp提示：{{form2[1]['msg']}}</p>
+                    <p>状态：{{form2[1]['state']}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{form2[1]['msg']}}</p>
                 </li>
                 <li class="clearfix">
                     <label>
@@ -58,7 +58,7 @@
                         <input class="infoVal" placeholder="user" type="text" v-model.lazy="form2[2]['value']['user']" :disabled="form2[2]['state'] == 3"/>
                         <input class="infoVal" placeholder="password" type="text" v-model.lazy="form2[2]['value']['password']" :disabled="form2[2]['state'] == 3"/>
                     </label>
-                    <p>状态：{{form2[2]['state']}}&nbsp&nbsp&nbsp&nbsp提示：{{form2[2]['msg']}}</p>
+                    <p>状态：{{form2[2]['state']}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{form2[2]['msg']}}</p>
                 </li>
                 <li class="clearfix">
                     <label>
@@ -66,7 +66,7 @@
                         <input class="infoVal" type="text" v-model.lazy="form2[3].value[0]" :disabled="form2[3]['state'] == 3"/>
                         <input class="infoVal" type="text" v-model.lazy="form2[3].value[1]" :disabled="form2[3]['state'] == 3"/>
                     </label>
-                    <p>状态：{{form2[3]['state']}}&nbsp&nbsp&nbsp&nbsp提示：{{form2[3]['msg']}}</p>
+                    <p>状态：{{form2[3]['state']}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{form2[3]['msg']}}</p>
                 </li>
             </ul>
             <button @click="initForm1">初始化</button>
