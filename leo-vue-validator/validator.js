@@ -59,10 +59,15 @@ export default {
         },
     },
     watch: {
-        forms(){
+        forms(newVal, oldVal){
             if(this.leoFormInit) {
+                if(newVal.length < this.leoFormLength && !this.isLeoValidatorRemove){
+                    throw new Error('必须使用removeField删除！')
+                }
                 this.initForms()
                 this.addAllWatch()
+                this.leoFormLength = newVal.length
+                this.isLeoValidatorRemove = false
             }
         }
     },
@@ -75,6 +80,8 @@ export default {
                 this.initForms()
                 this.addAllWatch()
                 this.leoFormInit = true
+                this.leoFormLength = this.forms.length
+                this.isLeoValidatorRemove = false
             }
         },
         getFormData(){
@@ -169,38 +176,38 @@ export default {
                     delete this.initFormsData[item.key]
                 }
             })
+            this.isLeoValidatorRemove = true
         },
-        validate(){
+        async validate(mode = 'all'){
             if(!this.leoFormInit) {
                 return new Promise((resolve, reject) => {
                     reject('请初始化')
                 })
             }
-            const promises = this.forms.map((item, i) => {
-                const res = this.validateField(item)
-                return isPromise(res) ? res : Promise.resolve(res)
-            })
-            return Promise.all(promises).then(() => {
-                return this.getResult()
-            })
-        },
-        getResult(){
             const forms = this.forms
             const result = {
                 valid: true,
                 msgs: [],
                 form: {}
             }
-            for(let form of forms) {
-                if(form.state > 1) {
-                    result.valid = false
-                    result.msgs.push(form.msg)
+            try{
+                for(let [index, form] of forms.entries()){
+                    await this.validateField(form)
+                    if(form.state > 1) {
+                        result.valid = false
+                        result.msgs.push(form.msg)
+                    }
+                    result.form[form.key] = {
+                        value: this.getItemValue(form.value),
+                        msg: form.msg,
+                        state: form.state,
+                        index: index
+                    }
+                    if(mode === 'first' && form.state == 2){
+                        return result
+                    }
                 }
-                result.form[form.key] = {
-                    value: this.getItemValue(form.value),
-                    msg: form.msg
-                }
-            }
+            }catch(e){}
             return result
         },
         validateOne(item, rule){
@@ -253,7 +260,7 @@ export default {
                 }
                 for(let i = 0; i < len; i++) {
                     await this.validateOne(item, rules[i])
-                    if(item.state !== 1) {
+                    if(item.state != 1) {
                         return
                     }
                 }
