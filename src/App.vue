@@ -37,7 +37,7 @@
             <button @click="reset">重置</button>
             <div>
                 <button @click="submit('all')">提交(全部验证)</button>
-                <button @click="submit('first')">提交（验证的第一个错误项）</button>
+                <button @click="submit('first')">提交（验证到第一个错误项）</button>
             </div>
         </leo-validator>
         <leo-validator ref="leoForm1" :forms="form2" tag="div" :class="{form2: true}">
@@ -79,7 +79,7 @@
             <button @click="reset1">重置</button>
             <div>
                 <button @click="submit1('all')">提交(全部验证)</button>
-                <button @click="submit1('first')">提交（验证的第一个错误项）</button>
+                <button @click="submit1('first')">提交（验证到第一个错误项）</button>
             </div>
         </leo-validator>
     </div>
