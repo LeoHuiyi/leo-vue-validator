@@ -25,31 +25,37 @@
                         <span>item{{index}}: </span>
                         <input class="infoVal" type="text" v-model="item.value"/>
                     </label>
-                    <button @click="deleteItem(item)">删除</button>
+                    <div>
+                        <button @click="deleteItem(item)">删除</button>
+                        <button @click="deleteItem1(item)">删除(不使用removeField 报错,初始化后）)</button>
+                    </div>
                     <p>状态：{{item.state}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{item.msg}}</p>
                 </li>
             </ul>
             <button @click="initForm">初始化</button>
             <button @click="add">添加</button>
-            <button @click="submit">提交</button>
             <button @click="reset">重置</button>
+            <div>
+                <button @click="submit('all')">提交(全部验证)</button>
+                <button @click="submit('first')">提交（验证的第一个错误项）</button>
+            </div>
         </leo-validator>
         <leo-validator ref="leoForm1" :forms="form2" tag="div" :class="{form2: true}">
             <h1>表单2</h1>
             <ul>
                 <li class="clearfix">
                     <label>
-                        <span>手机号 : </span>
-                        <input class="infoVal" type="text" v-model="form2[0]['value']"/>
-                    </label>
-                    <p>状态：{{form2[0]['state']}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{form2[0]['msg']}}</p>
-                </li>
-                <li class="clearfix">
-                    <label>
                         <span>没有验证 : </span>
                         <input class="infoVal" type="text" v-model="form2[1]['value']"/>
                     </label>
                     <p>状态：{{form2[1]['state']}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{form2[1]['msg']}}</p>
+                </li>
+                <li class="clearfix">
+                    <label>
+                        <span>手机号 : </span>
+                        <input class="infoVal" type="text" v-model="form2[0]['value']"/>
+                    </label>
+                    <p>状态：{{form2[0]['state']}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{form2[0]['msg']}}</p>
                 </li>
                 <li class="clearfix">
                     <label>
@@ -70,8 +76,11 @@
                 </li>
             </ul>
             <button @click="initForm1">初始化</button>
-            <button @click="submit1">提交</button>
             <button @click="reset1">重置</button>
+            <div>
+                <button @click="submit1('all')">提交(全部验证)</button>
+                <button @click="submit1('first')">提交（验证的第一个错误项）</button>
+            </div>
         </leo-validator>
     </div>
 </template>
@@ -238,8 +247,8 @@
             reset1(){
                 this.$refs.leoForm1.resetFields()
             },
-            submit1(){
-                this.$refs.leoForm1.validate().then((result)=> {
+            submit1(op){
+                this.$refs.leoForm1.validate(op).then((result)=> {
                     leoAlert(result)
                 }).catch((result)=>{
                     leoAlert(result)
@@ -249,8 +258,8 @@
             reset(){
                 this.$refs.leoForm.resetFields()
             },
-            submit(){
-                this.$refs.leoForm.validate().then((result)=> {
+            submit(op){
+                this.$refs.leoForm.validate(op).then((result)=> {
                     leoAlert(result)
                 }).catch((result)=>{
                     leoAlert(result)
@@ -282,6 +291,13 @@
             deleteItem(item){
                 this.$refs.leoForm.removeField(item)
             },
+            deleteItem1(item){
+                const forms = this.form1
+                const index = forms.indexOf(item)
+                if(index > -1) {
+                    forms.splice(index, 1)
+                }
+            }
         }
     }
 </script>
