@@ -34,6 +34,7 @@ export const ruleFn = {
             item.state = 2
             item.msg = rule.tip ? rule.tip : tip
         }
+        cb()
     },
     required(val, rule, item, cb) {
         const tip = '必填!'
