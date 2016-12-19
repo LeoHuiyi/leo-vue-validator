@@ -28,13 +28,13 @@ leo-vue-validator
         </h3>
         <h3>
             自定义回调：
-                1.必须要设置item.state = 1才能验证下面的事项
-                2.必须调用回调参数cb()验证才开始
+            1.必须要设置item.state = 1才能验证下面的事项
+            2.必须调用回调参数cb()验证才开始
         </h3>
         <h3>
             改变forms中value的值 都会进行验证
         </h3>
-        <leo-validator ref="leoForm" :forms="form1" tag="div" class="form1" :style="{paddingLeft: '10px'}">
+        <leo-validator ref="leoForm" :forms="form1" tag="div" :tagOptions="tagOptions1">
             <h1>表单1(动态添加表单)</h1>
             <ul class="MoUpFlo_Module MoUpFlo_enterInfo">
                 <li class="clearfix" v-for="(item, index) in form1">
@@ -57,7 +57,7 @@ leo-vue-validator
                 <button @click="submit('first')">提交（验证到第一个错误项）</button>
             </div>
         </leo-validator>
-        <leo-validator ref="leoForm1" :forms="form2" tag="div" :class="{form2: true}">
+        <leo-validator ref="leoForm1" :forms="form2" tag="div" :tagOptions="tagOptions2">
             <h1>表单2</h1>
             <ul>
                 <li class="clearfix">
@@ -78,8 +78,10 @@ leo-vue-validator
                     <label>
                         <span>异步验证整组验证 : </span>
                         <p>（obj形式 失去焦点验证 password: 123456）</p>
-                        <input class="infoVal" placeholder="user" type="text" v-model.lazy="form2[2]['value']['user']" :disabled="form2[2]['state'] == 3"/>
-                        <input class="infoVal" placeholder="password" type="text" v-model.lazy="form2[2]['value']['password']" :disabled="form2[2]['state'] == 3"/>
+                        <input class="infoVal" placeholder="user" type="text" v-model.lazy="form2[2]['value']['user']"
+                               :disabled="form2[2]['state'] == 3"/>
+                        <input class="infoVal" placeholder="password" type="text" v-model.lazy="form2[2]['value']['password']"
+                               :disabled="form2[2]['state'] == 3"/>
                     </label>
                     <p>状态：{{form2[2]['state']}}&nbsp;&nbsp;&nbsp;&nbsp;提示：{{form2[2]['msg']}}</p>
                 </li>
@@ -103,9 +105,9 @@ leo-vue-validator
 </template>
 
 <script>
-    import validator from './components/validator/validator'
+    import validator from 'leo-vue-validator/validator'
     function leoAlert(data) {
-        setTimeout(()=>{
+        setTimeout(() => {
             alert(JSON.stringify(data, null, 4))
         })
     }
@@ -137,8 +139,8 @@ leo-vue-validator
                         value: 'wahahha',
                         rules(value, rule, item, cb){
                             item.msg = 'loading'
-                            setTimeout(()=> {
-                                cb((newVal, rule, item)=> {
+                            setTimeout(() => {
+                                cb((newVal, rule, item) => {
                                     item.state = 1//1才能成功
                                     item.msg = '成功'
                                 })
@@ -178,19 +180,19 @@ leo-vue-validator
                         rules: [
                             {
                                 rule(value, rule, item, cb) {
-                                    if(value.user === ''){
+                                    if(value.user === '') {
                                         item.msg = 'user不能为空'
                                         item.state = 2
                                         cb()
                                         return
                                     }
                                     item.msg = 'user验证中'
-                                    setTimeout(()=> {
-                                        cb((newVal, rule, item)=> {
-                                            if(newVal.user.length > 6){
+                                    setTimeout(() => {
+                                        cb((newVal, rule, item) => {
+                                            if(newVal.user.length > 6) {
                                                 item.state = 2
                                                 item.msg = 'user不正确'
-                                            }else{
+                                            }else {
                                                 item.state = 1
                                                 item.msg = 'user验证成功'
                                             }
@@ -201,12 +203,12 @@ leo-vue-validator
                             {
                                 rule(value, rule, item, cb) {
                                     item.msg = 'password验证中'
-                                    setTimeout(()=> {
-                                        cb((newVal, rule, item)=> {
-                                            if(newVal.password == 123456){
+                                    setTimeout(() => {
+                                        cb((newVal, rule, item) => {
+                                            if(newVal.password == 123456) {
                                                 item.state = 1
                                                 item.msg = 'password验证成功'
-                                            }else{
+                                            }else {
                                                 item.state = 2
                                                 item.msg = 'password不正确'
                                             }
@@ -225,7 +227,7 @@ leo-vue-validator
                         rules: [
                             {
                                 rule(value, rule, item, cb) {
-                                    if(value[0] === '' || value[1] === ''){
+                                    if(value[0] === '' || value[1] === '') {
                                         item.msg = 'input都不能为空'
                                         item.state = 2
                                         cb()
@@ -233,12 +235,12 @@ leo-vue-validator
                                     }
                                     item.state = 3
                                     item.msg = '验证中'
-                                    setTimeout(()=> {
-                                        cb((newVal, rule, item)=> {
-                                            if(newVal[0] == newVal[1]){
+                                    setTimeout(() => {
+                                        cb((newVal, rule, item) => {
+                                            if(newVal[0] == newVal[1]) {
                                                 item.state = 1
                                                 item.msg = ''
-                                            }else{
+                                            }else {
                                                 item.state = 2
                                                 item.msg = '第一项和第二项不相等'
                                             }
@@ -252,6 +254,14 @@ leo-vue-validator
                         msg: ''
                     },
                 ],
+                tagOptions1: {
+                    'class': 'form1',
+                    'style': {paddingLeft: '10px'}
+                },
+                tagOptions2: {
+                    'class': {form2: true},
+                    'style': {paddingLeft: '10px'}
+                }
             }
         },
         methods: {
@@ -265,9 +275,9 @@ leo-vue-validator
                 this.$refs.leoForm1.resetFields()
             },
             submit1(op){
-                this.$refs.leoForm1.validate(op).then((result)=> {
+                this.$refs.leoForm1.validate(op).then((result) => {
                     leoAlert(result)
-                }).catch((result)=>{
+                }).catch((result) => {
                     leoAlert(result)
                 })
                 console.log(this.$refs.leoForm1.getFormData())
@@ -276,9 +286,9 @@ leo-vue-validator
                 this.$refs.leoForm.resetFields()
             },
             submit(op){
-                this.$refs.leoForm.validate(op).then((result)=> {
+                this.$refs.leoForm.validate(op).then((result) => {
                     leoAlert(result)
-                }).catch((result)=>{
+                }).catch((result) => {
                     leoAlert(result)
                 })
                 console.log(this.$refs.leoForm.getFormData())
@@ -289,7 +299,7 @@ leo-vue-validator
                     value: '',
                     rules: [
                         {
-                            rule: (value, rule, item, cb)=> {
+                            rule: (value, rule, item, cb) => {
                                 if('leo好帅' === value) {
                                     item.state = 1
                                     item.msg = ''
@@ -333,8 +343,7 @@ form.msg |	String	|	''	|   提示信息
 form.tip |	String	|	''	|   替代默认规则的提示信息
 form.deep |	Boolean	|	''	|   深度watch
 tag	|	String	|	'span'	|	leo-validator tag
-className	|	String or Object	|	无	|	leo-validator class
-style	|	Object	|	无	|	leo-validator style
+tagOptions	|	Object	|	无	|	leo-validator tagOptions
 
 ### Method
 
@@ -348,7 +357,7 @@ style	|	Object	|	无	|	leo-validator style
 :-----------------------|:--------------|
 initForm	|	  初始化(必须首次验证前调用 才能开始验证)
 resetFields	|	  重置
-validate	|	  验证（是个Promise，具体可以看例子）
+validate	|	  验证（是个Promise，具体可以看例子, 参数：all 全部验证，first：只验证到第一个错误项）
 removeField	|	  删除（删除item 可以传入数组）
 getFormData	|	  取得FormData
 

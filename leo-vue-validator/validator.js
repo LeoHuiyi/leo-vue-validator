@@ -1,13 +1,11 @@
-import {type, extend, isPromise} from './utils'
+import {type, extend} from './utils'
 import {ruleFn} from './rules'
 
 export default {
     name: 'leo-validator',
     render(h){
-        return h(this.tag || 'span', {
-            'class': this.className,
-            'style': this.style
-        }, this.$slots.default || [])
+        const tagOptions = this.tagOptions || null
+        return h(this.tag || 'span', {...tagOptions}, this.$slots.default || [])
     },
     data(){
         return Object.freeze({
@@ -51,10 +49,7 @@ export default {
             type: String,
             'default': 'span'
         },
-        className: {
-            type: [String, Object]
-        },
-        style: {
+        tagOptions: {
             type: Object
         },
     },
