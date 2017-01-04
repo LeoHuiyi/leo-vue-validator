@@ -3,7 +3,7 @@ leo-vue-validator
 
 ###一个异步的表单验证组件: 只变动数据，能适配各种UI
 
-###update：添加删除不使用removeField 报错提示；验证方式：all 全部验证，first：只验证到第一个错误项
+###update：添加删除不使用removeField 报错提示；验证方式：all 全部验证，first：只验证到第一个错误项, 添加resetCb回调, 表单验证时点击reset中断信息
 
 
 [demo在线链接](https://leohuiyi.github.io/leo-vue-validator/index.html)
@@ -105,7 +105,7 @@ leo-vue-validator
 </template>
 
 <script>
-    import validator from 'leo-vue-validator/validator'
+    import validator from './components/validator/validator'
     function leoAlert(data) {
         setTimeout(() => {
             alert(JSON.stringify(data, null, 4))
@@ -179,7 +179,7 @@ leo-vue-validator
                         },
                         rules: [
                             {
-                                rule(value, rule, item, cb) {
+                                rule(value, rule, item, cb, index) {
                                     if(value.user === '') {
                                         item.msg = 'user不能为空'
                                         item.state = 2
@@ -201,7 +201,7 @@ leo-vue-validator
                                 },
                             },
                             {
-                                rule(value, rule, item, cb) {
+                                rule(value, rule, item, cb, index) {
                                     item.msg = 'password验证中'
                                     setTimeout(() => {
                                         cb((newVal, rule, item) => {
@@ -226,7 +226,7 @@ leo-vue-validator
                         value: ['leo', 'leoWa'],
                         rules: [
                             {
-                                rule(value, rule, item, cb) {
+                                rule(value, rule, item, cb, index) {
                                     if(value[0] === '' || value[1] === '') {
                                         item.msg = 'input都不能为空'
                                         item.state = 2
@@ -235,7 +235,8 @@ leo-vue-validator
                                     }
                                     item.state = 3
                                     item.msg = '验证中'
-                                    setTimeout(() => {
+                                    item.timerId = setTimeout(() => {
+                                        item.timerId = null
                                         cb((newVal, rule, item) => {
                                             if(newVal[0] == newVal[1]) {
                                                 item.state = 1
@@ -245,11 +246,16 @@ leo-vue-validator
                                                 item.msg = '第一项和第二项不相等'
                                             }
                                         })
-                                    }, 1000)
-
+                                    }, 300)
                                 }
                             },
                         ],
+                        resetCb(item, i){
+                            if(item.timerId){  //clearTimeout
+                                clearTimeout(item.timerId)
+                                item.timerId = null
+                            }
+                        },
                         state: 0,
                         msg: ''
                     },
@@ -342,6 +348,7 @@ form.state |	String	|	''	|   0: 没有验证过, 1: 通过, 2: 不通过, 3: 验
 form.msg |	String	|	''	|   提示信息
 form.tip |	String	|	''	|   替代默认规则的提示信息
 form.deep |	Boolean	|	''	|   深度watch
+form.resetCb |	Function	|	''	|   reset回调
 tag	|	String	|	'span'	|	leo-validator tag
 tagOptions	|	Object	|	无	|	leo-validator tagOptions
 
