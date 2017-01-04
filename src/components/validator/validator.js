@@ -56,7 +56,7 @@ export default {
     watch: {
         forms(newVal, oldVal){
             if(this.leoFormInit) {
-                if(newVal.length < this.leoFormLength && !this.isLeoValidatorRemove){
+                if(newVal.length < this.leoFormLength && !this.isLeoValidatorRemove) {
                     throw new Error('必须使用removeField删除！')
                 }
                 this.initForms()
@@ -126,7 +126,7 @@ export default {
                     item.__enable = true
                     item.state = 0
                     item.__promiseHash = {}
-                }else{
+                }else {
                     item.__enable = false
                     this.$nextTick(() => {
                         item.__enable = true
@@ -151,6 +151,9 @@ export default {
                 }
                 item.state = 0
                 item.__promiseHash = {}
+                if(type(item.resetCb) === 'function') {
+                    item.resetCb(item, i)
+                }
             })
         },
         removeAllWatch(){
@@ -185,8 +188,8 @@ export default {
                 msgs: [],
                 form: {}
             }
-            try{
-                for(let [index, form] of forms.entries()){
+            try {
+                for(let [index, form] of forms.entries()) {
                     await this.validateField(form)
                     if(form.state > 1) {
                         result.valid = false
@@ -198,14 +201,19 @@ export default {
                         state: form.state,
                         index: index
                     }
-                    if(mode === 'first' && form.state == 2){
+                    if(mode === 'first' && form.state == 2) {
                         return result
                     }
                 }
-            }catch(e){}
+            }catch(e) {
+                return {
+                    info: e,
+                    result
+                }
+            }
             return result
         },
-        validateOne(item, rule){
+        validateOne(item, rule, index){
             let fn
             if(type(rule) === 'function') {
                 fn = rule
@@ -231,17 +239,19 @@ export default {
                     item.state = 3
                     fn(item.value, rule, item, (cb) => {
                         if(item.__promiseHash && item.__promiseHash[id]) {
-                            cb && cb(item.value, rule, item)
+                            cb && cb(item.value, rule, item, index)
                             delete item.__promiseHash[id]
+                            resolve()
+                        }else{
+                            reject('reset中断')
                         }
-                        resolve()
                         id = null
-                    })
+                    }, index)
                 })
             }
         },
         async validateField(item) {
-            if(item.state === 3){
+            if(item.state === 3) {
                 return
             }
             const rules = item.rules
@@ -254,7 +264,7 @@ export default {
                     return
                 }
                 for(let i = 0; i < len; i++) {
-                    await this.validateOne(item, rules[i])
+                    await this.validateOne(item, rules[i], i)
                     if(item.state != 1) {
                         return
                     }

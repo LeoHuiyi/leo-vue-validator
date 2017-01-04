@@ -162,7 +162,7 @@
                         },
                         rules: [
                             {
-                                rule(value, rule, item, cb) {
+                                rule(value, rule, item, cb, index) {
                                     if(value.user === '') {
                                         item.msg = 'user不能为空'
                                         item.state = 2
@@ -184,7 +184,7 @@
                                 },
                             },
                             {
-                                rule(value, rule, item, cb) {
+                                rule(value, rule, item, cb, index) {
                                     item.msg = 'password验证中'
                                     setTimeout(() => {
                                         cb((newVal, rule, item) => {
@@ -209,7 +209,7 @@
                         value: ['leo', 'leoWa'],
                         rules: [
                             {
-                                rule(value, rule, item, cb) {
+                                rule(value, rule, item, cb, index) {
                                     if(value[0] === '' || value[1] === '') {
                                         item.msg = 'input都不能为空'
                                         item.state = 2
@@ -218,7 +218,8 @@
                                     }
                                     item.state = 3
                                     item.msg = '验证中'
-                                    setTimeout(() => {
+                                    item.timerId = setTimeout(() => {
+                                        item.timerId = null
                                         cb((newVal, rule, item) => {
                                             if(newVal[0] == newVal[1]) {
                                                 item.state = 1
@@ -228,11 +229,16 @@
                                                 item.msg = '第一项和第二项不相等'
                                             }
                                         })
-                                    }, 1000)
-
+                                    }, 300)
                                 }
                             },
                         ],
+                        resetCb(item, i){
+                            if(item.timerId){  //clearTimeout
+                                clearTimeout(item.timerId)
+                                item.timerId = null
+                            }
+                        },
                         state: 0,
                         msg: ''
                     },
