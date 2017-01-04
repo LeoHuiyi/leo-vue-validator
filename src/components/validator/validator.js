@@ -28,7 +28,8 @@ export default {
                     //         {
                     //             rule: (value, rule, item, cb) => {
                     //                 item.msg = ''
-                    //                 setTimeout(() => {
+                    //                 item.timerId = setTimeout(() => {
+                    //                     item.timerId = null
                     //                     cb(() => {
                     //                         item.state = 1
                     //                         item.msg = 'wahahahahh'
@@ -37,6 +38,12 @@ export default {
                     //             }
                     //         }
                     //     ],//必须调用cb
+                    //     resetCb(item, i){
+                    //          if(item.timerId){  //clearTimeout
+                    //              clearTimeout(item.timerId)
+                    //              item.timerId = null
+                    //          }
+                    //     },//reset回调
                     //     state: 0,//0: 没有验证过, 1: 通过, 2: 不通过, 3: 验证中
                     //     msg: '',//提示信息
                     //     tip: '',//替代默认规则的提示信息
