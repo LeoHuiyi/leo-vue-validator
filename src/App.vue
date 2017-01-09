@@ -181,6 +181,7 @@
                                             }
                                         })
                                     }, 1000)
+//                                    throw new Error('error')
                                 },
                             },
                             {
@@ -200,6 +201,10 @@
                                 },
                             },
                         ],
+                        errorCb(e, item, i){
+                            leoAlert(e.name)
+                            console.log(e, item, i)
+                        },
                         state: 0,
                         msg: '',
                         deep: true//对象的必须深度监听
@@ -267,6 +272,7 @@
                 this.$refs.leoForm1.validate(op).then((result) => {
                     leoAlert(result)
                 }).catch((result) => {
+                    console.log('catch')
                     leoAlert(result)
                 })
                 console.log(this.$refs.leoForm1.getFormData())
@@ -278,6 +284,7 @@
                 this.$refs.leoForm.validate(op).then((result) => {
                     leoAlert(result)
                 }).catch((result) => {
+                    console.log('catch')
                     leoAlert(result)
                 })
                 console.log(this.$refs.leoForm.getFormData())
