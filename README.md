@@ -3,7 +3,7 @@ leo-vue-validator
 
 ###一个异步的表单验证组件: 只变动数据，能适配各种UI
 
-###update：添加删除不使用removeField 报错提示；验证方式：all 全部验证，first：只验证到第一个错误项, 添加resetCb回调, 表单验证时点击reset中断信息
+###update：添加删除不使用removeField 报错提示；验证方式：all 全部验证，first：只验证到第一个错误项, 添加resetCb回调, 表单验证时点击reset中断信息,添加errorCb回调, 表单验证时error中断信息
 
 
 [demo在线链接](https://leohuiyi.github.io/leo-vue-validator/index.html)
@@ -198,6 +198,7 @@ leo-vue-validator
                                             }
                                         })
                                     }, 1000)
+//                                    throw new Error('error')
                                 },
                             },
                             {
@@ -217,6 +218,10 @@ leo-vue-validator
                                 },
                             },
                         ],
+                        errorCb(e, item, i){
+                            leoAlert(e.name)
+                            console.log(e, item, i)
+                        },
                         state: 0,
                         msg: '',
                         deep: true//对象的必须深度监听
@@ -284,6 +289,7 @@ leo-vue-validator
                 this.$refs.leoForm1.validate(op).then((result) => {
                     leoAlert(result)
                 }).catch((result) => {
+                    console.log('catch')
                     leoAlert(result)
                 })
                 console.log(this.$refs.leoForm1.getFormData())
@@ -295,6 +301,7 @@ leo-vue-validator
                 this.$refs.leoForm.validate(op).then((result) => {
                     leoAlert(result)
                 }).catch((result) => {
+                    console.log('catch')
                     leoAlert(result)
                 })
                 console.log(this.$refs.leoForm.getFormData())
@@ -334,6 +341,7 @@ leo-vue-validator
         }
     }
 </script>
+
 ```
 
 ### options
@@ -349,6 +357,7 @@ form.msg |	String	|	''	|   提示信息
 form.tip |	String	|	''	|   替代默认规则的提示信息
 form.deep |	Boolean	|	''	|   深度watch
 form.resetCb |	Function	|	''	|   reset回调
+form.errorCb |	Function	|	''	|   errorCb回调
 tag	|	String	|	'span'	|	leo-validator tag
 tagOptions	|	Object	|	无	|	leo-validator tagOptions
 

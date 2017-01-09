@@ -1,5 +1,6 @@
 import {type, extend} from './utils'
 import {ruleFn} from './rules'
+import Vue from 'vue'
 
 export default {
     name: 'leo-validator',
@@ -44,6 +45,9 @@ export default {
                     //              item.timerId = null
                     //          }
                     //     },//reset回调
+                    //     errorCb(e, item, i){
+                    //         console.log(e, item, i)
+                    //     },//errorCb回调
                     //     state: 0,//0: 没有验证过, 1: 通过, 2: 不通过, 3: 验证中
                     //     msg: '',//提示信息
                     //     tip: '',//替代默认规则的提示信息
@@ -73,8 +77,12 @@ export default {
             }
         }
     },
+    created(){
+        this.initNotify()
+    },
     destroyed(){
         this.removeAllWatch()
+        this.destroyNotify()
     },
     methods: {
         initForm(){
@@ -162,6 +170,9 @@ export default {
                     item.resetCb(item, i)
                 }
             })
+            this.bus.$emit('notify', {
+                info: 'reset'
+            })
         },
         removeAllWatch(){
             this.forms.forEach((item, i) => {
@@ -183,7 +194,7 @@ export default {
             })
             this.isLeoValidatorRemove = true
         },
-        async validate(mode = 'all'){
+        async innerValidate(mode = 'all'){
             if(!this.leoFormInit) {
                 return new Promise((resolve, reject) => {
                     reject('请初始化')
@@ -220,6 +231,25 @@ export default {
             }
             return result
         },
+        initNotify() {
+            this.bus = new Vue()
+            this.bus.$on('notify', (msg) => {
+                this.__offValidate && this.__offValidate(msg)
+            })
+            this.__offValidate = null
+        },
+        destroyNotify(){
+            this.bus.$off('notify')
+            this.bus = null
+            this.__offValidate = null
+        },
+        validate(mode){
+            return Promise.race([this.innerValidate(mode),
+                new Promise((resolve, reject) => {
+                    this.__offValidate = reject
+                })
+            ])
+        },
         validateOne(item, rule, index){
             let fn
             if(type(rule) === 'function') {
@@ -235,7 +265,6 @@ export default {
                     fn = ruleName
                 }
             }
-
             if(fn) {
                 return new Promise((resolve, reject) => {
                     let id
@@ -249,8 +278,6 @@ export default {
                             cb && cb(item.value, rule, item, index)
                             delete item.__promiseHash[id]
                             resolve()
-                        }else{
-                            reject('reset中断')
                         }
                         id = null
                     }, index)
@@ -271,7 +298,18 @@ export default {
                     return
                 }
                 for(let i = 0; i < len; i++) {
-                    await this.validateOne(item, rules[i], i)
+                    try {
+                        await this.validateOne(item, rules[i], i)
+                    }catch(e) {
+                        if(type(item.errorCb) === 'function') {
+                            item.errorCb(e, item, i)
+                        }
+                        this.bus.$emit('notify', {
+                            info: 'error',
+                            result: item
+                        })
+                        return e
+                    }
                     if(item.state != 1) {
                         return
                     }
